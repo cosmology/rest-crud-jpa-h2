@@ -1,4 +1,4 @@
-# 🚀 Spring Boot 3, Spring Data JPA REST CRUD API
+# 🚀 Spring Boot 3, Spring Data JPA, REST API
 
 Sample REST API project exposes singe Spring Boot REST controller over Spring Data JPA and in-memory H2 database.
 Its primary focus is applying best practices when building RESTful APIs through:
@@ -19,7 +19,7 @@ mvn spring-boot:run
 
 #### **Step 1: Import collection**
 
-Import  [REST CRUD.postman_collection.json](REST_CRUD.postman_collection.json)
+Import  [REST_CRUD.postman_collection.json](REST_CRUD.postman_collection.json)
 
 #### **Step 2: Send individual requests**
 
