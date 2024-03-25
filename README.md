@@ -56,3 +56,11 @@ Tests help you confirm that your API is working as expected. You can write test 
 
 - Click on REST CRUD in your collections sidebar and go to Runs tab
 - Click 'Run REST CRUD' button to run the entire collection
+
+## 🔖 **Benchmark**
+
+POST a book then go to terminal:
+
+```bash
+ab -n 60 -c 20 http://localhost:9090/api/v1/book/1
+```

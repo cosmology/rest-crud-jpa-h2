@@ -47,11 +47,7 @@ public class BookService {
 
     public ResponseEntity<Book> getBookById(Long id) {
         Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            return new ResponseEntity<>(book.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return book.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     public ResponseEntity<List<Book>> getAllBooks() {
