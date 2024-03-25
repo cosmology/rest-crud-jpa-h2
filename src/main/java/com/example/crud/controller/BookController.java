@@ -18,36 +18,36 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api")
 public class BookController {
     @Autowired
     private BookService bookService;
-    @PostMapping
+    @PostMapping("book")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("book/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
-    @GetMapping
+    @GetMapping("books")
     public ResponseEntity<List<Book>> getAllBooks() {
         return bookService.getAllBooks();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("book/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         return bookService.updateBook(id, book);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("book/{id}")
     public Book updatePartialBook(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         return bookService.updatePartialBook(id, fields);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("book/{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
