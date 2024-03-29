@@ -1,9 +1,7 @@
 package com.example.crud.controller;
 
 import com.example.crud.entity.Book;
-import com.example.crud.service.BookService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.crud.service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,42 +17,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/api/v1")
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookServiceImpl bookServiceImpl;
 
-    @PostMapping("/book")
+    @PostMapping("book")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return bookService.createBook(book);
+        return bookServiceImpl.createBook(book);
     }
 
-    @GetMapping("/book/{id}")
+    @GetMapping("book/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return bookService.getBookById(id);
+        return bookServiceImpl.getBookById(id);
     }
 
-    @GetMapping("/books")
+    @GetMapping("books")
     public ResponseEntity<List<Book>> getAllBooks() {
-        return bookService.getAllBooks();
+        return bookServiceImpl.getAllBooks();
     }
 
-    @PutMapping("/book/{id}")
+    @PutMapping("book/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        return bookService.updateBook(id, book);
+        return bookServiceImpl.updateBook(id, book);
     }
 
-    @PatchMapping("/book/{id}")
+    @PatchMapping("book/{id}")
     public Book updatePartialBook(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        return bookService.updatePartialBook(id, fields);
+        return bookServiceImpl.updatePartialBook(id, fields);
     }
 
-    @DeleteMapping("/book/{id}")
+    @DeleteMapping("book/{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
-        return bookService.deleteBook(id);
+        return bookServiceImpl.deleteBook(id);
     }
 }
