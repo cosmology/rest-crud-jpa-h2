@@ -52,9 +52,8 @@ public class BookService {
 
     public ResponseEntity<List<Book>> getAllBooks() {
         try {
-            List<Book> bookList = new ArrayList<>();
 
-            bookRepository.findAll().forEach(bookList::add);
+            List<Book> bookList = new ArrayList<>(bookRepository.findAll());
 
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
