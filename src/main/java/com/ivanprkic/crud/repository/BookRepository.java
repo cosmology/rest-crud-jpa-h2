@@ -1,6 +1,6 @@
-package com.example.crud.repository;
+package com.ivanprkic.crud.repository;
 
-import com.example.crud.entity.Book;
+import com.ivanprkic.crud.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;

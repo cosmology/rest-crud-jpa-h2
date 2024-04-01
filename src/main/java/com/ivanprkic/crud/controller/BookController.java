@@ -1,8 +1,8 @@
-package com.example.crud.controller;
+package com.ivanprkic.crud.controller;
 
-import com.example.crud.entity.Book;
-import com.example.crud.service.BookServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ivanprkic.crud.entity.Book;
+import com.ivanprkic.crud.service.BookService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,40 +18,41 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/book")
 public class BookController {
 
-    @Autowired
-    private BookServiceImpl bookServiceImpl;
+    BookService bookService;
 
-    @PostMapping("book")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        return bookServiceImpl.createBook(book);
-    }
-
-    @GetMapping("book/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return bookServiceImpl.getBookById(id);
+        return new ResponseEntity<>(bookService.getBookById(id), HttpStatus.OK);
     }
 
-    @GetMapping("books")
+    @PostMapping
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        return new ResponseEntity<>(bookService.createBook(book), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<List<Book>> getAllBooks() {
-        return bookServiceImpl.getAllBooks();
+        return bookService.getAllBooks();
     }
 
-    @PutMapping("book/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        return bookServiceImpl.updateBook(id, book);
+        return bookService.updateBook(id, book);
     }
 
-    @PatchMapping("book/{id}")
+    @PatchMapping("/{id}")
     public Book updatePartialBook(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
-        return bookServiceImpl.updatePartialBook(id, fields);
+        return bookService.updatePartialBook(id, fields);
     }
 
-    @DeleteMapping("book/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
-        return bookServiceImpl.deleteBook(id);
+        bookService.deleteBook(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

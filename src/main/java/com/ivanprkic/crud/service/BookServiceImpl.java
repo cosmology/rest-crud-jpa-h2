@@ -1,7 +1,9 @@
-package com.example.crud.service;
+package com.ivanprkic.crud.service;
 
-import com.example.crud.entity.Book;
-import com.example.crud.repository.BookRepository;
+import com.ivanprkic.crud.entity.Book;
+import com.ivanprkic.crud.exception.BookNotFoundException;
+import com.ivanprkic.crud.repository.BookRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,14 +15,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final BookRepository bookRepository;
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    BookRepository bookRepository;
+
+    @Override
+    public Book getBookById(Long id) {
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()){
+            return book.get();
+        } else {
+            throw new BookNotFoundException(id);
+        }
     }
 
+    @Override
     public Book updatePartialBook(Long id, Map<String, Object> fields) {
         Optional<Book> existingBook = bookRepository.findById(id);
 
@@ -36,18 +47,9 @@ public class BookServiceImpl implements BookService {
         return null;
     }
 
-    public ResponseEntity<Book> createBook(Book book) {
-        try {
-            Book savedBook = bookRepository.save(book);
-            return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public ResponseEntity<Book> getBookById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        return book.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @Override
+    public Book createBook(Book book) {
+        return bookRepository.save(book);
     }
 
     public ResponseEntity<List<Book>> getAllBooks() {
@@ -65,13 +67,9 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    public ResponseEntity<HttpStatus> deleteBook(Long id) {
-        try {
-            bookRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @Override
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 
     public ResponseEntity<Book> updateBook(Long id, Book book) {

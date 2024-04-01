@@ -29,7 +29,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"Book 2\",\n    \"author\": \"Ema\"\n}",
+					"raw": "{\n\t\"title\": \"Book 1\",\n    \"author\": \"Ema\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -37,12 +37,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/books",
+					"raw": "{{base_url}}/api/{{v}}/book",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books"
+						"api",
+						"{{v}}",
+						"book"
 					]
 				},
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -58,9 +60,70 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>ID</th>",
+							"        <th>Title</th>",
+							"        <th>Author</th>",
+							"    </tr>",
+							"    <tr>",
+							"        <td>{{response.id}}</td>",
+							"        <td>{{response.title}}</td>",
+							"        <td>{{response.author}}</td>",
+							"    </tr>",
+							"</table>",
+							"`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    return {response: pm.response.json()}",
+							"}",
+							"",
+							"pm.visualizer.set(template, constructVisualizerPayload());",
+							"",
+							"pm.test(\"Content-Type header is 'application/json'\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body includes 'id', 'title', and 'author' fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('title');",
+							"    pm.expect(responseData).to.have.property('author');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Id is a non-negative integer\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Title and Author are non-empty strings\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+							"    pm.expect(responseData.author).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Author should not be empty\");",
+							"});",
+							"",
+							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -68,12 +131,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/books/{{id}}",
+					"raw": "{{base_url}}/api/{{v}}/book/{{id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books",
+						"api",
+						"{{v}}",
+						"book",
 						"{{id}}"
 					]
 				},
@@ -92,7 +157,8 @@
 							"    pm.response.to.have.status(200);",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -100,12 +166,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/books",
+					"raw": "{{base_url}}/api/{{v}}/book/all",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books"
+						"api",
+						"{{v}}",
+						"book",
+						"all"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -113,7 +182,7 @@
 			"response": []
 		},
 		{
-			"name": "Update all book data",
+			"name": "Update all fields for book id",
 			"event": [
 				{
 					"listen": "test",
@@ -124,7 +193,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -141,12 +211,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/books/{{id}}",
+					"raw": "{{base_url}}/api/{{v}}/book/{{id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books",
+						"api",
+						"{{v}}",
+						"book",
 						"{{id}}"
 					]
 				},
@@ -155,7 +227,7 @@
 			"response": []
 		},
 		{
-			"name": "Update partial book data",
+			"name": "Update partial fields for book id",
 			"event": [
 				{
 					"listen": "test",
@@ -166,7 +238,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -183,12 +256,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/books/{{id}}",
+					"raw": "{{base_url}}/api/{{v}}/book/{{id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books",
+						"api",
+						"{{v}}",
+						"book",
 						"{{id}}"
 					]
 				},
@@ -208,7 +283,8 @@
 							"});",
 							""
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -225,12 +301,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/books/{{id}}",
+					"raw": "{{base_url}}/api/{{v}}/book/{{id}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
-						"books",
+						"api",
+						"{{v}}",
+						"book",
 						"{{id}}"
 					]
 				},
@@ -267,6 +345,11 @@
 		{
 			"key": "base_url",
 			"value": "http://localhost:9090"
+		},
+		{
+			"key": "v",
+			"value": "v1",
+			"type": "string"
 		}
 	]
 }
